@@ -1,0 +1,733 @@
+<html>
+	<title> Gnode - app VLC </title>
+	<head>
+		<!-- Gnode !-->
+		<script data-version="2.0" src="http://dev.gnode.free.fr/gnode/version2.0/gnode.js" /></script>
+		<!-- node !-->
+		<script src="./js/node.js"></script>
+		<!-- libwind !-->
+		<link rel="styleSheet" type="text/css" media="screen" href="http://dev.gnode.free.fr/gnode/libWind/css_themes/inc_transp.css" />
+		<script data-version="1.1" src="http://dev.gnode.free.fr/gnode/libWind/libWind_1.1.js"></script>
+		</head>
+	<style>
+	
+	body{ margin:0; padding:0; overflow:hidden; width:100%; overflow:hidden;  }
+	#yt li ,.down_not, .down, .simple_btn_g, .simple_btn_r, .s_b_g_big, .simple_btn_g_s, .br2{ border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px; }
+	.ovfx{ overflow-x:hidden; }
+	.wh100{ height:100%; width:100%;}
+	p{ text-align:justify; } 
+	.tt{   font-size:13px; color:#414141; padding:10px; display:block; }
+	
+	/*Btn*/
+	.down_not, .down, .simple_btn_g, .simple_btn_r, .s_b_g_big, .simple_btn_g_s { display:inline-block; padding:5px; color:#fff; font-size:12px; font-weight:bold; }
+	.down_not, .down{ float:right;  margin:5px;  }
+	.s_b_g_big{ padding:10px; margin:5px; min-width:25px; text-align:center; }
+	.down_not, .down, .simple_btn_g, .simple_btn_r, .s_b_g_big {
+		border:1px solid #c0c0c0;  text-decoration:none; color:#414141;
+		background: -webkit-linear-gradient(top,#dfdfdf 10%,#f0f0f0 50%); 
+		background-image: -moz-linear-gradient(top,#dfdfdf 10%,#f0f0f0 50%); 
+	 }
+	 .down:hover, .simple_btn_g:hover, .s_b_g_big:hover, .simple_btn_g_s{
+		border:1px solid #c0c0c0; text-decoration:none; color:#909090; 
+		background: gradient(top,#fad00a 20%,#fdeea7 50%); 
+		background: -webkit-linear-gradient(top,#fad00a 20%,#fdeea7 50%) !important; 
+		background-image: -moz-linear-gradient(top,#fad00a 20%,#fce268 50%) !important; 
+		transition-duration:1s; box-shadow: 0px 5px 10px 0px #FDEEA7;
+		-webkit-transform: all 2s; -moz-transform: all 2s; transform: all 2s;
+	 }
+	 .down_not:hover, .simple_btn_r:hover{
+		border:1px solid #c0c0c0; text-decoration:none; color:#fff;
+		background: -webkit-linear-gradient(top,#ff0000 10%,#ff5f5f 50%) !important; 
+		background-image: -moz-linear-gradient(top,#ff0000 10%,#ff5f5f 50%) !important; 
+	 }
+	 
+	 /*VLC*/
+	#vlc .menu{ background: #ff000; width:100%; border-bottom:1px solid #b6bccc; padding:5px; font-size:12px;
+		background: -webkit-linear-gradient(bottom,#e6e6fa 2px,#fff 70%) !important; 
+		background-image: -moz-linear-gradient(bottom,#e6e6fa 2px,#fff 70%) !important; 
+	}	
+	#vlc .load{ 
+		border-radius:90px; vertical-align:2px; 
+		width:100%; height:10px; display:inline-block; overflow:hidden;
+		background: -webkit-linear-gradient(top,#b6bccc 2px, #f0f0f0 80%) !important; 
+		background-image: -moz-linear-gradient(top,#b6bccc 2px,#f0f0f0 70%) !important; 
+	}
+	#vlc .load .progress{ 
+		border-radius:90px; 
+		width:0%; height:10px; display:block; 
+		background: -webkit-linear-gradient(bottom,#277dcc 2px, #2a85da 80%) !important; 
+		background-image: -moz-linear-gradient(bottom,#277dcc 2px, #2a85da 80%) !important; 
+	}
+	.round{ 
+		border-radius:180px; float:right;
+		width:50%; height:10px; display:block; 
+		background: #ff000;
+	}
+	
+	/*css VLC app*/
+	#vlc .btnlil{ background-repeat:no-repeat; background-position:center; width:10px; height:5px; padding:4px; display:block; }
+	#vlc .btn{ background-repeat:no-repeat; background-position:center; width:15px; height:10px; padding:5px; display:block; }
+	#vlc .player{ background-image:url("./img/vlc/play.png");	}
+	#vlc .pause{ background-image:url("./img/vlc/pause.png");	}
+	#vlc .prev{ background-image:url("./img/vlc/prev.png");	}
+	#vlc .stop{ background-image:url("./img/vlc/stop.png");	}
+	#vlc .next{ background-image:url("./img/vlc/next.png");	}
+	#vlc .repeat{ background-image:url("./img/vlc/repeat.png");	}
+	#vlc .panel{ background-image:url("./img/vlc/panel.png");	}
+	#vlc .rand{ background-image:url("./img/vlc/rand.png");	}
+	
+	#vlc .show_timer{ position:absolute;  top:330px; display:none; text-align:center; }
+	#vlc .show_timer div{
+		font-size:10px; border:1px solid #c5c5c5; padding:2px 8px 2px 8px; background:#f0f0f0;
+		position:relative;
+	}
+	#vlc .show_timer div:after{
+			position:absolute; content:"";
+			border:0; height:0; width:0; left:10px; bottom:-8;
+			border-right: 8px solid transparent;
+			border-left: 8px solid transparent;
+			border-top: 8px solid #f0f0f0;
+			
+			background:transparent !important;
+			
+	}
+	
+	#vlc .timer{ 
+		padding:2px; font-size:12px;  padding:0 5px 5px 5px;
+		height:10px; display:inline-block; 
+		
+	} 
+	#vlc .clr_vol{ 
+		background: -webkit-linear-gradient(right, #ff4500,#ffb99f,#ade7a7,#ffff00) !important; 
+		background-image: -moz-linear-gradient(right, #ff4500,#ffb99f,#ade7a7,#ffff00) !important; 
+	}
+	#vlc .clr_vol_mute{ 
+		background:#ff0000;
+		}
+	.vlcul li{ padding:20px 60px; font-size:12px; }
+	</style>
+
+	<body>
+		<input type="text" value="NINASIMONE-FEELINGGOOD.mp3" class="listen" ><input type="submit" value="Listen" onclick="_import('vlc').exec( './'+gnode('.listen').val( ) );"> <a href="#" onclick="_import('vlc').exec();" >open vlc</a> 
+	</body>
+<script>
+_export("RAW_PACK",[],function(a,b,c ){
+	
+	// mount img 
+	c.img = function( _src ){
+		var o = document.createElement("img");
+		return gnode( o ).made({ src: _src  });
+	};
+	
+	// preload img
+	c.preload = function( _img ){
+		var i;
+		for( i in _img ){
+			_img[i] = this.img( _img[i] );
+		}
+	// handle img
+	return _img;
+	};
+	
+	c.screen = function( a, wx, wy ){
+		var y = window.screen.availHeight,
+			x = window.screen.availWidth;
+			
+		y -= wy;
+		x -= wx;
+		
+		switch( a ){
+		case "center": 
+			x /= 2;
+			y /= 2;
+		break;
+		case "top":
+			y /= 4;
+			x /= 2;
+		break;
+		// origine value
+		default:
+			x = 200;
+			y = 50;
+		}
+	return { x:x, y:y };
+	};
+	
+return c;
+});
+// JS
+/*export to gnode*/
+_export("audio",[],function(a,b,c){
+	var status = false;
+	
+	function bool( a ){
+		return ( typeof "boolean" ? a : ( a === "true" ? true : a ==="false" ? false :  null )  ); 
+	}
+	function rand( a, b ){
+		var n = -1;
+		
+		try{
+			while( !( n <= a && n >= 0 ) )
+				n = Math.floor( Math.random( )*a );;
+		}catch(e){};
+	
+	return n;
+	}
+	
+	function io( a ){
+		var t = -1;
+		
+		if( a && !bool( status ) ){
+			this.audio.play( );
+			status = true;
+			t = this.status = 1;
+			
+		}else if( !a && bool( status ) ){
+			this.audio.pause( );
+			status = false;
+			t = this.status = 2;
+		}
+		if( this.btnPlayer && typeof this.btnPlayer == "function" && t > -1 ){
+			this.btnPlayer.call( this, status );
+		}
+		
+	return status;
+	}
+	
+	/* object */
+	function audio( haudio ){
+		var t;
+		
+		this.audio    = gnode( haudio ).node;
+		this.status   = 0;
+		this.playlist = [];
+		
+		// push in playlist;
+		this.audio.any("source",function( h ){
+			this.playlist.push( h.node.src ) ;
+		});
+		
+	return this;
+	}
+	
+	audio.start = function( ){
+		( this.onstart && typeof this.onstart == "function" ) ? this.onstart.call( this, this.audio.duration ) : 0;
+	return false;
+	};
+	audio.timeFormat = function( sec ){
+		var h,m,s;
+		
+			if( sec/3600 > 0 ){
+				h = Math.floor( sec/3600 );
+			}
+			m = Math.floor( (sec%3600)/60 );
+			s = Math.floor( sec%60 );
+			
+	return (h ? h <=9 ? "0"+h+":" : h+":" : "" )+( m <= 9 ? "0"+m : m )+":"+( s <= 9 ? "0"+s : s); 
+	};	
+	audio.prevNext = function( a,b ){
+		var num;
+		
+		if( this.isPlay( ) || this.status == 2 )
+			this.stop( );;
+		
+		// just one 
+		if( this.list == -1 ){
+			this.play( );
+			
+		// has playlist
+		}else{
+			
+			// using random song
+			num =  ( this.random && b ) ? rand( this.playlist.length, this.list ) : ( a ? (this.list--)-1 : (this.list++)+1 );
+			
+			if( this.list >= this.playlist.length )
+				num = this.list = 0;
+			else if( this.list < 0 )
+				num = this.list = this.playlist.length-1;;
+				
+			this.load( ( this.title = this.playlist[ num ] ) );
+			this.play( );
+		}
+	return this;	
+	};
+	audio.striker =function( h, callback ){
+		var argv = [],i = arguments.length;
+			
+			while( i >=  2 ){
+				argv[ i-2 ] = arguments[i];
+				--i;
+			}
+		if( h && ( callback && typeof callback == "function" ) ){
+			return callback.apply( h, argv );
+		}	
+	return h;
+	};
+	audio.prototype = {
+		
+		list:-1,	
+		vol:1,
+		repeat:true,
+		random:false,
+		ismute:false,
+		title:"",
+		
+		// event 
+		raz:null,
+		onstart:null,
+		error:null,
+		btnPlayer:null,
+		
+		timeFormat: audio.timeFormat,
+		
+		/*basic*/
+		play: function( ){
+			return !bool( status ) ? ( ( this.status != 1 && this.status != 2 ? audio.start.call( this ) : 0 ) || io.call(this, true ) ) : bool( status );
+		},
+		pause:function( ){
+			return bool( status ) ? io.call(this, false ) : bool( status );
+		},
+		isPlay: function(){
+			return bool( status );
+		},
+		stop:function( ){
+			
+			this.audio.currentTime && this.audio.duration ? ( this.audio.currentTime = this.audio.duration ) : 0;
+			if( this.raz && typeof this.raz == "function" ){
+				this.raz.call( this );
+			}
+			status = false;
+			this.status = 3;
+				
+		return true;
+		},
+		
+		load:function( a ){
+			var load;
+			
+			if( typeof a == "string" )
+				load = a;
+			else if( this.playlist[ a ] ){
+				load = this.playlist[ a ];
+			}	
+
+			if( status || this.status == 1 || this.status == 2 ){
+				this.stop( );
+			}
+			// new src
+			this.audio.gnode.child("$source").made( { src: load });
+			this.audio.load( );
+		
+		return this;
+		},
+		end: function( callback ){
+			var slf = this,tmp = 0;
+			
+			this.audio.onended = function( ){			
+				
+				tmp = slf.status;
+				if( typeof callback == "function" ){
+					callback.call( slf );
+				}
+				status = false;
+				slf.status = 0;
+				
+				// default
+				if( tmp != 3 ){
+					
+					if( slf.repeat || ( slf.list > -1 ? ( slf.list+1 < slf.playlist.length ) : 0 ) ){ 
+						audio.prevNext.call( slf, false, true );
+					}
+				}
+			};	
+		return slf;
+		},	
+		progress: function( callback ){
+			var slf = this;
+			
+			this.audio.ontimeupdate = function( ){
+				return audio.striker( slf, callback, ( ( this.currentTime / this.duration)*100 ), this.currentTime, this.duration  );
+			};
+		return slf;
+		},
+		canplay:function( callback ){
+			var slf = this;
+			this.audio.oncanplay = function( ){
+				return audio.striker( slf, callback, this.duration );
+			}
+		return this;
+		},
+		
+		// playlist
+		prev:function( ){
+			return audio.striker( this, audio.prevNext, true);
+		},
+		next:function( ){
+			return audio.striker( this, audio.prevNext, false);;
+		},
+		add:function( a ){
+			this.playlist.push( a );
+			
+			if( this.list == -1 )
+				this.list = 0;
+			
+		return (this.playlist.length-1);
+		},
+		rmv:function( a ){
+			if( typeof a == "number" ){
+				
+			}
+		},
+	
+		//
+		getTime: function( p ){
+			return ( ( this.audio.duration * p )/100 );
+		},	
+		goTo:function( p ){
+			
+			// p is numeric in percent
+			if( !isNaN( this.audio.duration ) && ( p <= 100 || p >= 0 ) ){
+			
+				this.audio.currentTime = this.getTime( p );
+				audio.striker( this.audio , this.audio.ontimeupdate );			
+			}
+		return this;
+		},
+		
+		//
+		mute:function( ){
+			
+			this.audio.volume = 0;
+			this.ismute = true;
+		},
+		volume:function( p ){
+			
+			
+			if( this.ismute )
+				this.audio.volume = this.vol;;
+			
+			p && p <= 1 && p >=0 ? this.vol = this.audio.volume = p : 0;
+			this.ismute = false;
+			
+		return this;
+		}
+	};
+	
+	// strikers
+	return function( a ){
+		return new audio( a );
+	};
+});
+
+_export("vlc_about",function(a,b,c){
+	
+});
+_export("vlc",[],function(a,b,c){
+	// window handle
+	var _w_, child,help,
+		swind = {},
+		
+		// player
+		haudio,
+		hsound,sound ={
+			2:"./img/vlc/vol_lo.png",
+			4:"./img/vlc/vol_hi.png",
+			8:"./img/vlc/vol_mute.png"
+		},
+		timer,timend,progress,bplay;
+	
+	// preload img
+	a("RAW_PACK").preload( sound );
+	
+	// detach close 
+	swind.detach = swind.Hclose = function( ){
+		timer = timend = _w_= !_w_;
+	return 1;
+	};
+	
+	
+	function razPlayer( ){
+
+		this.btnPlayer( false );
+		// raz progress
+		progress.css("width",0);
+		// raz time
+		timer.content( "--:--" );
+		timend.content( "--:--" );
+	
+	return void 0;
+	}
+	// test 
+	function divpos( h ){
+		var x = y = 0;
+	try{
+		while( ( h && h.tagName != 'BODY' ) ){
+			x += h.offsetLeft;
+			y += h.offsetTop;
+			h = h.offsetParent;
+		}
+	}catch( e ){};
+				
+	return { x:x,
+		   	y:y
+			};
+	}
+	function about( ){
+		if( !child ){
+			child = libWind.window("About", 1, 0,0 , 500, "auto", { parent:_w_.token, free:0} );
+			child.hMain.css("background","#f5f5f5");
+			child.hMain.content('<div style="display:flex;"> <div style="width:200px; padding:10px;" ><img src="http://images.videolan.org/images/largeVLC.png" width="100%" height="200px" ></div> <div> <h2>Player multimedia VLC</h2><h4>2.1.5 Rincewind</h4> <div style="width:100%; height:100px; overflow-x:hidden; font-size:12px; border:1px solid #000; ">ssssssdsdsd</div> </div></div>'
+								+'<div style="background:#e6e6e6;"><ul id="ul_inline" class="vlcul" ><li><a href="#">Author</a></li><li><a href="#">Licence</a></li><li><a href="#">Credit</a></li></ul></div>');
+		}
+	}
+	function helper(){
+		if( !help ){
+		
+			help = libWind.window("Help", 1, 0,0 , 400, "auto", { parent:_w_.token, free:1, Hclose:function(){ help=!help; return 1; } } );
+			help.hMain.content('<div style="padding:10px; font-size:12px; background:#fff; "> <p> <h5><b>Bienvenue dans l\'aide du lecteur multimedia VLC</b></h5> Vous pouvez aider le projet VideoLAN en donnant de votre temps pour aider la communaute, pour concevoir des interfaces, pour traduire la documentation, pour tester et pour coder. Vous pouvez aussi donner de l\'argent ou du materiel pour nous aider. Et bien sur, vous pouvez promouvoir le lecteur multimedia VLC.</p> </div>'
+								+'<div style="text-align:right; padding:10px"><a href="#" class="simple_btn_r" >Close</a></div>');
+		}else{
+			help.close( );
+		}		
+	}
+	
+	c.about = function( ){
+		about( );
+	};
+	c.addPlaylist = function( a ){
+		_w_ ? haudio.add(a) : 0;
+	};
+	c.exec = function( ){
+		var screen;
+		
+		if( !_w_ ){
+		
+			screen = a("RAW_PACK").screen( "center", 900, 500 );
+			_w_ = libWind.window("Player VLC", 1, screen.x, screen.y, 800, "auto", swind );
+
+			_w_.hMain.content('<div id="vlc">'
+							 +'<audio controls="controls" style="display:none;"> <source src="Vandal - Mr Politician (Kaotik 02).mp3" type="audio/mp3"><source src="NINASIMONE-FEELINGGOOD.mp3" type="audio/mp3"></audio>'
+							 +'<div class="menu"> media Help </div>'
+							 +"<div style='background:#000; width:100%; height:auto; text-align:center;'> <img src='http://images.videolan.org/images/largeVLC.png' style='margin:auto; margin:100 0 100 0; width:15%; height:20%;'> </div>"
+							+'<div style="background:#f0f0f0; width:100%; padding:2px;"> '
+							+"<div style='display:flex; width:99%; margin:auto;' > <div class='timer'>--:--</div> <div class='load'> <div  class='show_timer' data-show='false' > <div> 2:00 </div> </div> <div class='progress'> </div></div> <div class='timer'>--:--</div> </div>"
+							+'<div class="button">'
+							+'<a href="#" class="simple_btn_g play" ><span class="btn player"></span> </a> '
+							+"<div style='margin-left:5px; display:inline-block;' > <a href='#' class='simple_btn_g ' > <span class='btnlil prev'></span> </a><a href='#' class='simple_btn_g ' >  <span class='btnlil stop'></span> </a><a href='#' class='simple_btn_g ' > <span class='btnlil next'></span> </a> <a href='#' class='simple_btn_g' > <span class='btnlil panel'></span> </a> <a href='#' class='simple_btn_g_s' > <span class='btnlil repeat'></span> </a> <a href='#' class='simple_btn_g' > <span class='btnlil rand'></span> </a> </div>"
+							+'<div style="display:inline-block; float:right; margin-right:5px;" class="volume" ><img src="./img/vlc/vol_lo.png" class="vol" ><div style="width:80px; height:30px;  display:inline-block; position:relative;"><div class="ctrl_vol clr_vol" style="top:0; width:50%; height:100%; position:absolute; "></div> <img src="./img/vlc/vol.png" style="position:absolute;" > <div style="position:absolute; color:#a27878; top:8px; left:5px; font-size:10px;" class="vol_perc" > 50%</div> </div> </div> </div>'
+							+'</div>');
+			
+			
+			// new audio
+			haudio =  a("audio")( _w_.hMain.child("#vlc").child("$audio").node );
+			
+			_w_.hMain.any("div:.timer",function(h,i){
+				if( !timer ) 
+					timer = h;
+				else if( !timend )
+					timend = h;;
+			});
+			_w_.hMain.any("div:.volume",function( h ){
+				var old_src,vol_perc;
+				
+				h.any("div:.vol_perc",function(h){
+					vol_perc = h;
+				});
+				
+				h.child("$img").on("click",function( ){
+						
+						if( !haudio.ismute ){
+
+							old_src  = this.node.src;
+							h.child("$div").child("$div").Class("clr_vol_mute").rmClass("clr_vol")
+							h.child("$img").made({ src: sound[8].node.src  });
+							haudio.mute( );
+					
+						}else{
+							h.child("$img").made({ src: old_src });
+							h.child("$div").child("$div").Class("clr_vol").rmClass("clr_vol_mute");
+							haudio.volume( );
+						}
+
+					});
+					
+				h.child("$div").on("click",function( event ){
+						var vol =( event.pageX - divpos( this ).x ) / this.width( ),
+							perc = vol*100;
+						
+						haudio.volume( vol );
+						
+						this.child("$div").css("width",perc+"%");
+						vol_perc.content( Math.floor( perc )+"%" );
+						
+							if( !haudio.ismute )
+								h.child("$div").child("$div").Class("clr_vol").rmClass("clr_vol_mute");;
+								
+							if( old_src != sound[4].node.src && perc >= 65 )
+								h.child("$img").made({ src: ( old_src = sound[4].node.src  ) });
+							else if( old_src != sound[2].node.src && perc < 65 )
+								h.child("$img").made({ src: ( old_src = sound[2].node.src  ) });
+					});
+				
+			});
+			_w_.hMain.any("div:.progress",function(h){
+						progress=h;
+						gnode( h.node.parentNode ).on("click",function( event ){
+							// to perc
+							haudio.goTo(  ( ( event.pageX- divpos ( this.node ).x ) / this.width( ) )*100 ); 
+							if( !haudio.isPlay( ) )
+								haudio.play( );;
+									
+						}).on("mousemove",function( event ){
+							var nh;
+							
+							if( haudio.status == 0)
+								return;
+								
+							_w_.hMain.any("div:.show_timer",function(h){
+								nh =h;
+								h.show();
+							});
+							
+							nh.child("$div").content( 
+								haudio.timeFormat(  haudio.getTime( ( ( event.pageX- divpos ( this.node ).x ) / this.width( ) )*100 ) ) 
+								);
+							nh.css("left", ( event.pageX - divpos( this.node ).x  +25 )  )
+								
+							
+						}).on("mouseout",function( event ){
+							
+							if( haudio.status == 0 )
+								return;
+							// hide timer
+							_w_.hMain.any("div:.show_timer",function(h){
+								h.hide();
+							});
+						});
+				});
+			
+			// event toolbutton 
+			_w_.hMain.any("div:.button",function(h){
+				h.any("$a",function( hh ,i ){
+						
+						// button player
+						if( i == 0 ){
+							bplay = hh.on("click",function( ){
+								if( !haudio.isPlay( ) ){
+						
+									haudio.play( );
+									
+								}else if ( haudio.isPlay( ) ){
+						
+									haudio.pause( );
+
+								}
+							});
+						}
+						
+						// button previous
+						// button stop
+						// button next
+						if( i == 1 ){
+							hh.on("click",function( ){
+									haudio.prev( );
+								});
+						}
+						if( i == 2 ){
+							hh.on("click",function( ){
+								haudio.status != 0 ? haudio.stop( ) : 0;
+								});
+						}
+						if( i == 3 ){
+							hh.on("click",function( ){
+									haudio.next( );
+								});
+						}
+						//
+						
+						if( i == 4 ){
+							hh.on("click",function( ){
+									haudio.audio.currentTime = haudio.audio.duration-5;
+								});
+						}
+						
+						// button repeat
+						// button random
+						if( i == 5 ){
+							hh.on("click",function( ){
+									haudio.repeat = !haudio.repeat;
+									this.isClass("simple_btn_g") ? this.Class("simple_btn_g_s").rmClass("simple_btn_g") : this.Class("simple_btn_g").rmClass("simple_btn_g_s");
+								});
+						}
+						if( i == 6 ){
+							hh.on("click",function( ){
+									haudio.random = !haudio.random;
+									this.isClass("simple_btn_g") ? this.Class("simple_btn_g_s").rmClass("simple_btn_g") : this.Class("simple_btn_g").rmClass("simple_btn_g_s");
+								});
+						}
+						//
+					});
+				
+			});
+			// finish
+			
+			/*Config audio*/
+			haudio.raz = razPlayer;
+			haudio.vol = 0.5;
+			haudio.btnPlayer = function( a ){
+				if( a ){
+					bplay.child("$span")
+						 .Class("pause").fin( ).rmClass("player");
+				}else if( !a ){
+					bplay.child("$span")
+						 .Class("player").fin( ).rmClass("pause");
+				}
+			};
+			haudio.end( function( ){
+				this.raz( );
+			} );
+			haudio.progress( function( a,b,c  ){
+				
+				progress.css("width", a +"%");
+				// updatetime
+				timer.content( this.timeFormat( b ) );
+				timend.content( this.timeFormat( c-b ) );
+			
+			} );
+			haudio.canplay( haudio.onstart = function( duration ){
+					_w_.title( "<span style='font-size:10px'>"+haudio.title +"</span> - Player VLC");
+					timer.content( this.timeFormat( 0 ) );
+					timend.content( !isNaN( duration ) ? this.timeFormat( duration ) : "??:??" );
+			} );
+			
+			/**/
+	
+		// if windows yet openning 
+		}else if( _w_ ){
+		
+			// get focus
+			libWind.focus( _w_.handle.data("pid").replace("pid","") , _w_.token );
+			
+			if( arguments[ 0 ] && haudio.status == 1 || haudio.status == 2 )
+				haudio.stop( );
+				
+			if( arguments[ 0 ] ){
+				haudio.load(  haudio.add( arguments[0] ) ).play( );
+			}
+			
+			
+		}else{
+			// import MsgBox
+			a("msgBox")(null, "Warning an error occurred, cannot opening VLC app", 0x100 | 0x08 );
+		}
+	
+	return _w_;
+	};
+});
+
+		
+		// Run to Vlc
+		_import("vlc").exec( );
+</script>
+
+</html>
