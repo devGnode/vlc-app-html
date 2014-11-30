@@ -402,9 +402,10 @@ _export("audio",[],function(a,b,c){
 		},
 		volume:function( p ){
 			
-			
-			if( this.ismute )
+			if( this.ismute ){
 				this.audio.volume = this.vol;;
+				this.ismute = !this.ismute;
+			}
 			
 			p && p <= 1 && p >=0 ? ( this.vol = this.audio.volume = p,
 			this.ismute = false ): 0;
