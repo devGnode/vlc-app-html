@@ -406,8 +406,8 @@ _export("audio",[],function(a,b,c){
 			if( this.ismute )
 				this.audio.volume = this.vol;;
 			
-			p && p <= 1 && p >=0 ? this.vol = this.audio.volume = p : 0;
-			this.ismute = false;
+			p && p <= 1 && p >=0 ? ( this.vol = this.audio.volume = p,
+			this.ismute = false ): 0;
 			
 		return this;
 		}
@@ -555,18 +555,20 @@ _export("vlc",[],function(a,b,c){
 						var vol =( event.pageX - divpos( this ).x ) / this.width( ),
 							perc = vol*100;
 						
+						// remove color
+						if( haudio.ismute ){
+							h.child("$div").child("$div")
+							.Class("clr_vol").rmClass("clr_vol_mute");;
+						}
+						
+						// img sound						
+						old_src != sound[ ( 2 + ( perc >=65 ? 2 : 0 ) ) ].node.src || haudio.ismute ? 
+							h.child("$img").made({ src: ( old_src = sound[ ( 2 + ( perc >=65 ? 2 : 0 ) ) ].node.src  ) }) : 0;
+							
 						haudio.volume( vol );
 						
 						this.child("$div").css("width",perc+"%");
 						vol_perc.content( Math.floor( perc )+"%" );
-						
-							if( !haudio.ismute )
-								h.child("$div").child("$div").Class("clr_vol").rmClass("clr_vol_mute");;
-								
-							if( old_src != sound[4].node.src && perc >= 65 )
-								h.child("$img").made({ src: ( old_src = sound[4].node.src  ) });
-							else if( old_src != sound[2].node.src && perc < 65 )
-								h.child("$img").made({ src: ( old_src = sound[2].node.src  ) });
 					});
 				
 			});
